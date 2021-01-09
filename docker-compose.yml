@@ -83,4 +83,6 @@ services:
       - "traefik.http.routers.filebrowser.tls.certresolver=domain2dnsresolver"      
     environment:
       - FB_BASEURL=/
+      - FB_USERNAME=milk
+      - FB_PASSWORD=Admin123!
     restart: always      
