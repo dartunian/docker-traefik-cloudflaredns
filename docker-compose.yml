@@ -1,0 +1,65 @@
+version: "3"
+services:
+  traefik:
+    build:
+      context: .
+      dockerfile: dockerfile
+      args:
+        DOMAIN_1: ${DOMAIN_1}
+        DOMAIN_2: ${DOMAIN_2}
+    container_name: "traefik"
+    command:
+      # Globals
+      - "--log.level=DEBUG"
+      - "--api=true"
+      - "--global.sendAnonymousUsage=false"
+      # Docker
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--providers.docker.endpoint=unix:///var/run/docker.sock"
+      # Entrypoints
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.websecure.address=:443"
+      # LetsEncrypt ${DOMAIN_1}
+    #  - "--certificatesresolvers.domain1dnsresolver.acme.caServer=https://acme-staging-v02.api.letsencrypt.org/directory"
+      - "--certificatesresolvers.domain1dnsresolver.acme.email=${CF_API_EMAIL}"
+      - "--certificatesresolvers.domain1dnsresolver.acme.dnschallenge.provider=cloudflare"
+      - "--certificatesresolvers.domain1dnsresolver.acme.storage=/etc/traefik/${DOMAIN_1}/acme.json"
+      # LetsEncrypt ${DOMAIN_2}
+    #  - "--certificatesresolvers.domain2dnsresolver.acme.caServer=https://acme-staging-v02.api.letsencrypt.org/directory"
+      - "--certificatesresolvers.domain2dnsresolver.acme.email=${CF_API_EMAIL}"
+      - "--certificatesresolvers.domain2dnsresolver.acme.dnschallenge.provider=cloudflare"
+      - "--certificatesresolvers.domain2dnsresolver.acme.storage=/etc/traefik/${DOMAIN_2}/acme.json"      
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      - CF_API_EMAIL=${CF_API_EMAIL}
+      - CF_API_KEY=${CF_API_KEY}
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+    labels:
+      # API
+      - "traefik.enable=true"
+      - "traefik.http.routers.traefik.rule=Host(`web.${DOMAIN_1}`)"
+      - "traefik.http.services.traefik.loadbalancer.server.port=8080"
+      - "traefik.http.services.traefik.loadbalancer.server.scheme=http"
+      # Wildcard cert
+      - "traefik.http.routers.traefik.tls.domains[0].main=${DOMAIN_1}"
+      - "traefik.http.routers.traefik.tls.domains[0].sans=*.${DOMAIN_1}"
+      - "traefik.http.routers.traefik.tls.certresolver=domain1dnsresolver"
+      # Global http-->https
+      - "traefik.http.routers.http-catchall.rule=hostregexp(`{host:[a-z-.]+}`)"
+      - "traefik.http.routers.http-catchall.entrypoints=web"
+      - "traefik.http.routers.http-catchall.middlewares=redirect-to-https"
+      - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
+  whoami:
+    image: "containous/whoami"
+    container_name: "whoami"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.whoami.rule=Host(`${DOMAIN_2}`)"
+      - "traefik.http.routers.whoami.entrypoints=websecure"
+      - "traefik.http.routers.whoami.tls.domains[0].main=${DOMAIN_2}"
+      - "traefik.http.routers.whoami.tls.domains[0].sans=*.${DOMAIN_2}"
+      - "traefik.http.routers.whoami.tls.certresolver=domain2dnsresolver"
