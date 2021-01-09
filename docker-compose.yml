@@ -70,7 +70,7 @@ services:
       args:
         DOMAIN_1: ${DOMAIN_1}
         DOMAIN_2: ${DOMAIN_2}    
-      container_name: "hastatic"
+    container_name: "hastatic"
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.hastatic.rule=Host(`web.${DOMAIN_2}`)"
