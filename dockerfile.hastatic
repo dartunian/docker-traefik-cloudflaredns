@@ -1,6 +1,6 @@
 FROM abhin4v/hastatic:latest
 ARG DOMAIN_1
 ARG DOMAIN_2
-COPY mywebsite /opt/mywebsite
-WORKDIR /opt/mywebsite
+COPY ${DOMAIN_2} /opt/${DOMAIN_2}
+WORKDIR /opt/${DOMAIN_2}
 CMD ["/usr/bin/hastatic"]

@@ -63,3 +63,18 @@ services:
       - "traefik.http.routers.whoami.tls.domains[0].main=${DOMAIN_2}"
       - "traefik.http.routers.whoami.tls.domains[0].sans=*.${DOMAIN_2}"
       - "traefik.http.routers.whoami.tls.certresolver=domain2dnsresolver"
+  hastatic:
+    build:
+      context: .
+      dockerfile: dockerfile.hastatic
+      args:
+        DOMAIN_1: ${DOMAIN_1}
+        DOMAIN_2: ${DOMAIN_2}    
+      container_name: "hastatic"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.hastatic.rule=Host(`web.${DOMAIN_2}`)"
+      - "traefik.http.routers.hastatic.entrypoints=websecure"
+      - "traefik.http.routers.hastatic.tls.domains[0].main=${DOMAIN_2}"
+      - "traefik.http.routers.hastatic.tls.domains[0].sans=*.${DOMAIN_2}"
+      - "traefik.http.routers.hastatic.tls.certresolver=domain2dnsresolver"      
