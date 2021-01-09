@@ -21,12 +21,12 @@ services:
       - "--entrypoints.web.address=:80"
       - "--entrypoints.websecure.address=:443"
       # LetsEncrypt ${DOMAIN_1}
-    #  - "--certificatesresolvers.domain1dnsresolver.acme.caServer=https://acme-staging-v02.api.letsencrypt.org/directory"
+      - "--certificatesresolvers.domain1dnsresolver.acme.caServer=https://acme-staging-v02.api.letsencrypt.org/directory"
       - "--certificatesresolvers.domain1dnsresolver.acme.email=${CF_API_EMAIL}"
       - "--certificatesresolvers.domain1dnsresolver.acme.dnschallenge.provider=cloudflare"
       - "--certificatesresolvers.domain1dnsresolver.acme.storage=/etc/traefik/${DOMAIN_1}/acme.json"
       # LetsEncrypt ${DOMAIN_2}
-    #  - "--certificatesresolvers.domain2dnsresolver.acme.caServer=https://acme-staging-v02.api.letsencrypt.org/directory"
+      - "--certificatesresolvers.domain2dnsresolver.acme.caServer=https://acme-staging-v02.api.letsencrypt.org/directory"
       - "--certificatesresolvers.domain2dnsresolver.acme.email=${CF_API_EMAIL}"
       - "--certificatesresolvers.domain2dnsresolver.acme.dnschallenge.provider=cloudflare"
       - "--certificatesresolvers.domain2dnsresolver.acme.storage=/etc/traefik/${DOMAIN_2}/acme.json"      
@@ -73,7 +73,7 @@ services:
   filebrowser:
     image: filebrowser/filebrowser
     ports:
-      - 8080:8080
+      - 8080:80
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.filebrowser.rule=Host(`files.${DOMAIN_2}`)"
