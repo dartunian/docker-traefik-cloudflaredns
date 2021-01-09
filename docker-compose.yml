@@ -76,11 +76,11 @@ services:
       - 8080:8080
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.hastatic.rule=Host(`files.${DOMAIN_2}`)"
-      - "traefik.http.routers.hastatic.entrypoints=websecure"
-      - "traefik.http.routers.hastatic.tls.domains[0].main=${DOMAIN_2}"
-      - "traefik.http.routers.hastatic.tls.domains[0].sans=*.${DOMAIN_2}"
-      - "traefik.http.routers.hastatic.tls.certresolver=domain2dnsresolver"      
+      - "traefik.http.routers.filebrowser.rule=Host(`files.${DOMAIN_2}`)"
+      - "traefik.http.routers.filebrowser.entrypoints=websecure"
+      - "traefik.http.routers.filebrowser.tls.domains[0].main=${DOMAIN_2}"
+      - "traefik.http.routers.filebrowser.tls.domains[0].sans=*.${DOMAIN_2}"
+      - "traefik.http.routers.filebrowser.tls.certresolver=domain2dnsresolver"      
     environment:
       - FB_BASEURL=/filebrowser
     restart: always      
