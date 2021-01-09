@@ -82,5 +82,5 @@ services:
       - "traefik.http.routers.filebrowser.tls.domains[0].sans=*.${DOMAIN_2}"
       - "traefik.http.routers.filebrowser.tls.certresolver=domain2dnsresolver"      
     environment:
-      - FB_BASEURL=/filebrowser
+      - FB_BASEURL=/
     restart: always      
