@@ -70,7 +70,7 @@ services:
       - "traefik.http.routers.hastatic.tls.domains[0].main=${DOMAIN_2}"
       - "traefik.http.routers.hastatic.tls.domains[0].sans=*.${DOMAIN_2}"
       - "traefik.http.routers.hastatic.tls.certresolver=domain2dnsresolver"
- filebrowser:
+  filebrowser:
     image: filebrowser/filebrowser
     ports:
       - 8080:8080
