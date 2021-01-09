@@ -48,6 +48,14 @@ services:
       - "traefik.http.routers.traefik.tls.domains[0].main=${DOMAIN_1}"
       - "traefik.http.routers.traefik.tls.domains[0].sans=*.${DOMAIN_1}"
       - "traefik.http.routers.traefik.tls.certresolver=domain1dnsresolver"
+      # Auth
+      - "traefik.http.middlewares.traefik-auth.basicauth.users=${TRAEFIKADMIN}"
+      - "traefik.http.routers.redirect-to-https.middlewares=authelia"
+      - "traefik.http.routers.redirect-to-https.service=api@internal"
+      - "traefik.http.middlewares.strip.stripprefix.prefixes=/"      
+      - "traefik.http.middlewares.authelia.forwardauth.address=http://authelia:9091/api/verify?rd=https://login.${DOMAIN_1}/"
+      - traefik.http.middlewares.authelia.forwardauth.trustforwardheader=true
+      - traefik.http.middlewares.authelia.forwardauth.authresponseheaders=Remote-User, Remote-Groups
       # Global http-->https
       - "traefik.http.routers.http-catchall.rule=hostregexp(`{host:[a-z-.]+}`)"
       - "traefik.http.routers.http-catchall.entrypoints=web"
@@ -73,7 +81,9 @@ services:
   filebrowser:
     image: filebrowser/filebrowser
     ports:
-      - 8080:80
+      - 8888:80
+    container_name: filebrowser
+    restart: unless-stopped
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.filebrowser.rule=Host(`files.${DOMAIN_2}`)"
@@ -83,5 +93,15 @@ services:
       - "traefik.http.routers.filebrowser.tls.certresolver=domain2dnsresolver"      
     environment:
       - FB_BASEURL=/
-      - FB_PASSWORD=$2y$10$UF.Vhrpfl0k3iTeHO7nIhennEIORHaceHmzSVMkDEAUHN2MxKyMIa
-    restart: always      
+  authelia:
+    image: authelia/authelia
+    container_name: authelia
+    restart: unless-stopped
+    environment:
+      - TZ=America/Los_Angeles
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.authelia-https.rule=Host(`login.${DOMAIN_1}`)"     
+      - "traefik.http.routers.authelia-https.entrypoints=websecure"
+      - "traefik.http.routers.authelia-https.service=authelia-svc"
+      - "traefik.http.services.authelia-svc.loadbalancer.server.port=9091"
