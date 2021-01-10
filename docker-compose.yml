@@ -97,8 +97,6 @@ services:
     build:
       context: .
       dockerfile: dockerfile.authelia
-      args:
-        DOMAIN_1: ${DOMAIN_1}
     container_name: "authelia"
     restart: unless-stopped
     environment:
@@ -108,7 +106,6 @@ services:
       - AUTHELIA_SESSION_SECRET_FILE=/config/secrets/authelia_session_secret       
     volumes:
       - ./authelia:/config
-      - ./authelia/secrets:/config/secrets:ro 
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.authelia-https.rule=Host(`login.${DOMAIN_1}`)"     
