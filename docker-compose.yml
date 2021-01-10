@@ -98,6 +98,8 @@ services:
       context: .
       dockerfile: dockerfile.authelia
     container_name: "authelia"
+    ports:
+      - 9090:9090
     restart: unless-stopped
     environment:
       - TZ=America/Los_Angeles
@@ -112,4 +114,4 @@ services:
       - "traefik.http.routers.authelia-https.rule=Host(`login.${DOMAIN_1}`)"     
       - "traefik.http.routers.authelia-https.entrypoints=websecure"
       - "traefik.http.routers.authelia-https.service=authelia-svc"
-      - "traefik.http.services.authelia-svc.loadbalancer.server.port=9091"
+      - "traefik.http.services.authelia-svc.loadbalancer.server.port=9090"
