@@ -1,4 +1,4 @@
-FROM authelia:latest
+FROM authelia/authelia:4
 RUN mkdir /config/secrets && \
     touch /config/secrets/authelia_jwt_secret && \
     echo ${AUTHELIA_JWT_SECRET} >> /config/secrets/authelia_jwt_secret && \
