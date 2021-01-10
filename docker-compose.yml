@@ -106,6 +106,7 @@ services:
       - AUTHELIA_SESSION_SECRET_FILE=/run/secrets/authelia_session_secret       
     volumes:
       - ./authelia:/config
+      - ./authelia/secrets:/run/secrets:ro 
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.authelia-https.rule=Host(`login.${DOMAIN_1}`)"     
