@@ -105,10 +105,7 @@ services:
       - TZ=America/Los_Angeles
       - DOMAIN_1=${DOMAIN_1}
       - AUTHELIA_JWT_SECRET_FILE=/config/secrets/authelia_jwt_secret
-      - AUTHELIA_SESSION_SECRET_FILE=/config/secrets/authelia_session_secret      
-    secrets:
-      - authelia_jwt_secret
-      - authelia_session_secret     
+      - AUTHELIA_SESSION_SECRET_FILE=/config/secrets/authelia_session_secret       
     volumes:
       - ./authelia:/config
       - ./authelia/secrets:/config/secrets:ro 
