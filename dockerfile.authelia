@@ -1,7 +1,7 @@
 FROM authelia/authelia:4
-RUN mkdir /config/secrets && \
-    touch /config/secrets/authelia_jwt_secret && \
-    echo ${AUTHELIA_JWT_SECRET} >> /config/secrets/authelia_jwt_secret && \
+RUN mkdir /run/secrets && \
+    touch /run/secrets/authelia_jwt_secret && \
+    echo ${AUTHELIA_JWT_SECRET} >> /run/secrets/authelia_jwt_secret && \
     touch /config/secrets/authelia_session_secret && \
-    echo ${AUTHELIA_SESSION_SECRET} >> /config/secrets/authelia_session_secret && \
-    chmod -R 600 /config/secrets
+    echo ${AUTHELIA_SESSION_SECRET} >> /run/secrets/authelia_session_secret && \
+    chmod -R 600 /run/secrets
