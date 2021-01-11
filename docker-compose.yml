@@ -17,50 +17,61 @@ services:
       - "--providers.docker=true"
       - "--providers.docker.exposedbydefault=false"
       - "--providers.docker.endpoint=unix:///var/run/docker.sock"
+      - "--providers.file.directory=/rules"
       # Entrypoints
       - "--entrypoints.web.address=:80"
       - "--entrypoints.websecure.address=:443"
-      # LetsEncrypt ${DOMAIN_1}
-      - "--certificatesresolvers.domain1dnsresolver.acme.caServer=https://acme-staging-v02.api.letsencrypt.org/directory"
-      - "--certificatesresolvers.domain1dnsresolver.acme.email=${CF_API_EMAIL}"
-      - "--certificatesresolvers.domain1dnsresolver.acme.dnschallenge.provider=cloudflare"
-      - "--certificatesresolvers.domain1dnsresolver.acme.storage=/etc/traefik/${DOMAIN_1}/acme.json"
-      # LetsEncrypt ${DOMAIN_2}
-      - "--certificatesresolvers.domain2dnsresolver.acme.caServer=https://acme-staging-v02.api.letsencrypt.org/directory"
-      - "--certificatesresolvers.domain2dnsresolver.acme.email=${CF_API_EMAIL}"
-      - "--certificatesresolvers.domain2dnsresolver.acme.dnschallenge.provider=cloudflare"
-      - "--certificatesresolvers.domain2dnsresolver.acme.storage=/etc/traefik/${DOMAIN_2}/acme.json"      
+      - "--entrypoints.https.forwardedHeaders.trustedIPs=173.245.48.0/20,103.21.244.0/22,103.22.200.0/22,103.31.4.0/22,141.101.64.0/18,108.162.192.0/18,190.93.240.0/20,188.114.96.0/20,197.234.240.0/22,198.41.128.0/17,162.158.0.0/15,104.16.0.0/12,172.64.0.0/13,131.0.72.0/22"
+      # LetsEncrypt
+      - "--certificatesresolvers.dns-cloudflare.acme.caServer=https://acme-staging-v02.api.letsencrypt.org/directory"
+      - "--certificatesresolvers.dns-cloudflare.acme.email=${CF_API_EMAIL}"
+      - "--certificatesresolvers.dns-cloudflare.acme.dnschallenge.provider=cloudflare"
+      - --certificatesResolvers.dns-cloudflare.acme.dnsChallenge.resolvers=1.1.1.1:53,1.0.0.1:53      
+      - "--certificatesresolvers.dns-cloudflare.acme.storage=/etc/traefik/acme.json"     
     ports:
-      - "80:80"
-      - "443:443"
+      - target: 80
+        published: 80
+        protocol: tcp
+        mode: host
+      - target: 443
+        published: 443
+        protocol: tcp
+        mode: host
+      - target: 8080
+        published: 8080
+        protocol: tcp
+        mode: host
     environment:
       - CF_API_EMAIL=${CF_API_EMAIL}
       - CF_API_KEY=${CF_API_KEY}
     volumes:
+      - "./traefik/rules:/rules"
+      - "./shared:/shared"      
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
     labels:
-      # API
-      - "traefik.enable=true"
-      - "traefik.http.routers.traefik.rule=Host(`api.${DOMAIN_1}`)"
-      - "traefik.http.services.traefik.loadbalancer.server.port=8080"
-      - "traefik.http.services.traefik.loadbalancer.server.scheme=http"
-      # Wildcard cert
-      - "traefik.http.routers.traefik.tls.domains[0].main=${DOMAIN_1}"
-      - "traefik.http.routers.traefik.tls.domains[0].sans=*.${DOMAIN_1}"
-      - "traefik.http.routers.traefik.tls.certresolver=domain1dnsresolver"
-      # Auth
-      - "traefik.http.middlewares.traefik-auth.basicauth.users=${TRAEFIKADMIN}"
-      - "traefik.http.routers.redirect-to-https.middlewares=authelia"
-      - "traefik.http.routers.redirect-to-https.service=api@internal"
-      - "traefik.http.middlewares.strip.stripprefix.prefixes=/"      
-      - "traefik.http.middlewares.authelia.forwardauth.address=http://authelia:9091/api/verify?rd=https://login.${DOMAIN_1}/"
-      - "traefik.http.middlewares.authelia.forwardauth.trustforwardheader=true"
-      - traefik.http.middlewares.authelia.forwardauth.authresponseheaders=Remote-User, Remote-Groups
       # Global http-->https
       - "traefik.http.routers.http-catchall.rule=hostregexp(`{host:[a-z-.]+}`)"
       - "traefik.http.routers.http-catchall.entrypoints=web"
       - "traefik.http.routers.http-catchall.middlewares=redirect-to-https"
-      - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
+      - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"      
+      # API
+      - "traefik.http.routers.traefik.entrypoints=https"      
+      - "traefik.http.routers.traefik.rule=Host(`api.${DOMAIN_1}`)"
+      - "traefik.enable=true"
+      - "traefik.http.routers.traefik.tls.certresolver=dns-cloudflare"      
+      - "traefik.http.routers.traefik-rtr.tls=true"      
+#      - "traefik.http.services.traefik.loadbalancer.server.port=8080"
+#      - "traefik.http.services.traefik.loadbalancer.server.scheme=http"
+      # Wildcard cert
+      - "traefik.http.routers.traefik.tls.domains[0].main=${DOMAIN_1}"
+      - "traefik.http.routers.traefik.tls.domains[0].sans=*.${DOMAIN_1}"
+      - "traefik.http.routers.traefik.tls.domains[1].main=${DOMAIN_2}"
+      - "traefik.http.routers.traefik.tls.domains[1].sans=*.${DOMAIN_2}"      
+      # Middlewares
+      - "traefik.http.routers.redirect-to-https.middlewares=middlewares-basic-auth@file"
+      # Services - API  
+      - "traefik.http.routers.redirect-to-https.service=api@internal"      
+      # Auth
   hastatic:
     build:
       context: .
