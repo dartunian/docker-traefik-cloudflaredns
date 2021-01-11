@@ -59,7 +59,7 @@ services:
       - "traefik.http.routers.traefik.rule=Host(`api.${DOMAIN_1}`)"
       - "traefik.enable=true"
       - "traefik.http.routers.traefik.tls.certresolver=dns-cloudflare"      
-      - "traefik.http.routers.traefik-rtr.tls=true"      
+      - "traefik.http.routers.traefik.tls=true"      
 #      - "traefik.http.services.traefik.loadbalancer.server.port=8080"
 #      - "traefik.http.services.traefik.loadbalancer.server.scheme=http"
       # Wildcard cert
@@ -71,7 +71,6 @@ services:
       - "traefik.http.routers.redirect-to-https.middlewares=middlewares-basic-auth@file"
       # Services - API  
       - "traefik.http.routers.redirect-to-https.service=api@internal"      
-      # Auth
   hastatic:
     build:
       context: .
@@ -86,9 +85,6 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.hastatic.rule=Host(`web.${DOMAIN_1}`)"
       - "traefik.http.routers.hastatic.entrypoints=websecure"
-      - "traefik.http.routers.hastatic.tls.domains[0].main=${DOMAIN_1}"
-      - "traefik.http.routers.hastatic.tls.domains[0].sans=*.${DOMAIN_1}"
-      - "traefik.http.routers.hastatic.tls.certresolver=domain2dnsresolver"
   filebrowser:
     image: filebrowser/filebrowser
     ports:
@@ -98,31 +94,28 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.filebrowser.rule=Host(`files.${DOMAIN_1}`)"
-      - "traefik.http.routers.filebrowser.entrypoints=websecure"
-      - "traefik.http.routers.filebrowser.tls.domains[0].main=${DOMAIN_1}"
-      - "traefik.http.routers.filebrowser.tls.domains[0].sans=*.${DOMAIN_1}"
-      - "traefik.http.routers.filebrowser.tls.certresolver=domain2dnsresolver"      
+      - "traefik.http.routers.filebrowser.entrypoints=websecure"     
     environment:
       - FB_BASEURL=/
-  authelia:
-    build:
-      context: .
-      dockerfile: dockerfile.authelia
-    container_name: "authelia"
-    ports:
-      - 9090:9090
-    restart: unless-stopped
-    environment:
-      - TZ=America/Los_Angeles
-      - DOMAIN_1=${DOMAIN_1}
-      - AUTHELIA_JWT_SECRET_FILE=/run/secrets/authelia_jwt_secret
-      - AUTHELIA_SESSION_SECRET_FILE=/run/secrets/authelia_session_secret       
-    volumes:
-      - ./authelia:/config
-      - ./authelia/secrets:/run/secrets:ro 
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.authelia-https.rule=Host(`login.${DOMAIN_1}`)"     
-      - "traefik.http.routers.authelia-https.entrypoints=websecure"
-      - "traefik.http.routers.authelia-https.service=authelia-svc"
-      - "traefik.http.services.authelia-svc.loadbalancer.server.port=9090"
+  # authelia:
+  #   build:
+  #     context: .
+  #     dockerfile: dockerfile.authelia
+  #   container_name: "authelia"
+  #   ports:
+  #     - 9090:9090
+  #   restart: unless-stopped
+  #   environment:
+  #     - TZ=America/Los_Angeles
+  #     - DOMAIN_1=${DOMAIN_1}
+  #     - AUTHELIA_JWT_SECRET_FILE=/run/secrets/authelia_jwt_secret
+  #     - AUTHELIA_SESSION_SECRET_FILE=/run/secrets/authelia_session_secret       
+  #   volumes:
+  #     - ./authelia:/config
+  #     - ./authelia/secrets:/run/secrets:ro 
+  #   labels:
+  #     - "traefik.enable=true"
+  #     - "traefik.http.routers.authelia-https.rule=Host(`login.${DOMAIN_1}`)"     
+  #     - "traefik.http.routers.authelia-https.entrypoints=websecure"
+  #     - "traefik.http.routers.authelia-https.service=authelia-svc"
+  #     - "traefik.http.services.authelia-svc.loadbalancer.server.port=9090"
