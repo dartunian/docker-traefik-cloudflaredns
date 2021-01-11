@@ -56,7 +56,7 @@ services:
       - "traefik.http.routers.http-catchall.middlewares=redirect-to-https"
       - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
       # API
-      - "traefik.http.routers.traefik.entrypoints=https"
+      - "traefik.http.routers.traefik.entrypoints=websecure"
       - "traefik.http.routers.traefik.rule=Host(`api.${DOMAIN_1}`)"
       - "traefik.enable=true"
       - "traefik.http.routers.traefik.tls.certresolver=dns-cloudflare"
@@ -83,9 +83,9 @@ services:
     ports:
       - "3000:3000"
     labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.hastatic.rule=Host(`web.${DOMAIN_1}`)"
       - "traefik.http.routers.hastatic.entrypoints=websecure"
+      - "traefik.http.routers.hastatic.rule=Host(`web.${DOMAIN_1}`)"
+      - "traefik.enable=true"
   filebrowser:
     image: filebrowser/filebrowser
     ports:
@@ -93,10 +93,10 @@ services:
     container_name: filebrowser
     restart: unless-stopped
     labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.filebrowser.rule=Host(`files.${DOMAIN_1}`)"
       - "traefik.http.routers.filebrowser.entrypoints=websecure"     
-    environment:
+      - "traefik.http.routers.filebrowser.rule=Host(`files.${DOMAIN_1}`)"
+      - "traefik.enable=true"
+      environment:
       - FB_BASEURL=/
   # authelia:
   #   build:
