@@ -96,7 +96,7 @@ services:
       - "traefik.http.routers.filebrowser.entrypoints=websecure"     
       - "traefik.http.routers.filebrowser.rule=Host(`files.${DOMAIN_1}`)"
       - "traefik.enable=true"
-      environment:
+    environment:
       - FB_BASEURL=/
   # authelia:
   #   build:
