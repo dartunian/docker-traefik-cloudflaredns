@@ -87,7 +87,11 @@ services:
       - "traefik.http.routers.hastatic.rule=Host(`web.${DOMAIN_1}`)"
       - "traefik.enable=true"
   filebrowser:
-    image: filebrowser/filebrowser
+    build:
+      context: .
+      dockerfile: dockerfile.filebrowser
+      args:
+        DOMAIN_1: ${DOMAIN_1}
     ports:
       - 8888:80
     container_name: filebrowser
