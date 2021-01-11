@@ -1,1 +1,2 @@
 FROM authelia/authelia:4
+ARG DOMAIN_1
