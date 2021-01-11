@@ -6,7 +6,8 @@ CF_API_EMAIL=
 CF_API_KEY=
 DOMAIN_1=
 DOMAIN_2=
-TRAEFIKADMIN=user:pass
-AUTHELIA_JWT_SECRET=
-AUTHELIA_SESSION_SECRET=
 ```
+
+Create secrets for `/secrets/authelia_jwt_secret` and `/secrets/authelia_session_secret`
+
+Create user in `/shared/.htpassword`
