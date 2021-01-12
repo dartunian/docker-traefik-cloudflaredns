@@ -11,7 +11,7 @@ services:
     command:
       # Globals
       - "--log.level=DEBUG"
-      - "--api=true"
+      - "--api.dashboard=true"
       - "--global.sendAnonymousUsage=false"
       # Docker
       - "--providers.docker=true"
