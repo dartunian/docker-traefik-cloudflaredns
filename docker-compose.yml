@@ -56,14 +56,14 @@ services:
       - "traefik.http.routers.http-catchall.middlewares=redirect-to-https"
       - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
       # API
-      - "traefik.http.routers.traefik.entrypoints=websecure"
-      - "traefik.http.routers.traefik.rule=Host(`api.${DOMAIN_1}`)"
       - "traefik.enable=true"
-      - "traefik.http.routers.traefik.tls.certresolver=dns-cloudflare"
-      - "traefik.http.routers.traefik.tls=true"
-#      - "traefik.http.services.traefik.loadbalancer.server.port=8080"
-#      - "traefik.http.services.traefik.loadbalancer.server.scheme=http"
+      - "traefik.http.routers.traefik.entrypoints=web"
+      - "traefik.http.routers.traefik.rule=Host(`api.${DOMAIN_1}`)"
+      - "traefik.http.services.traefik.loadbalancer.server.port=8080"
+      - "traefik.http.services.traefik.loadbalancer.server.scheme=http"
       # Wildcard cert
+      - "traefik.http.routers.traefik.tls=true"
+      - "traefik.http.routers.traefik.tls.certresolver=dns-cloudflare"
       - "traefik.http.routers.traefik.tls.domains[0].main=${DOMAIN_1}"
       - "traefik.http.routers.traefik.tls.domains[0].sans=*.${DOMAIN_1}"
       - "traefik.http.routers.traefik.tls.domains[1].main=${DOMAIN_2}"
@@ -83,9 +83,9 @@ services:
     ports:
       - "3000:3000"
     labels:
+      - "traefik.enable=true"
       - "traefik.http.routers.hastatic.entrypoints=websecure"
       - "traefik.http.routers.hastatic.rule=Host(`web.${DOMAIN_1}`)"
-      - "traefik.enable=true"
   filebrowser:
     build:
       context: .
@@ -97,9 +97,9 @@ services:
     container_name: filebrowser
     restart: unless-stopped
     labels:
+      - "traefik.enable=true"
       - "traefik.http.routers.filebrowser.entrypoints=websecure"     
       - "traefik.http.routers.filebrowser.rule=Host(`files.${DOMAIN_1}`)"
-      - "traefik.enable=true"
     environment:
       - FB_BASEURL=/
   # authelia:
