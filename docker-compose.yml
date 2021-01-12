@@ -57,10 +57,10 @@ services:
       - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
       # API
       - "traefik.enable=true"
-      - "traefik.http.routers.traefik.entrypoints=web"
+      - "traefik.http.routers.traefik.entrypoints=websecure"
       - "traefik.http.routers.traefik.rule=Host(`api.${DOMAIN_1}`)"
-      - "traefik.http.services.traefik.loadbalancer.server.port=8080"
-      - "traefik.http.services.traefik.loadbalancer.server.scheme=http"
+#      - "traefik.http.services.traefik.loadbalancer.server.port=8080"
+#      - "traefik.http.services.traefik.loadbalancer.server.scheme=http"
       # Wildcard cert
       - "traefik.http.routers.traefik.tls=true"
       - "traefik.http.routers.traefik.tls.certresolver=dns-cloudflare"
