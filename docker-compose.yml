@@ -30,7 +30,7 @@ services:
       - "--certificatesresolvers.dns-cloudflare.acme.caServer=https://acme-staging-v02.api.letsencrypt.org/directory"
       - "--certificatesresolvers.dns-cloudflare.acme.email=${CF_API_EMAIL}"
       - "--certificatesresolvers.dns-cloudflare.acme.dnschallenge.provider=cloudflare"
-      - --certificatesResolvers.dns-cloudflare.acme.dnsChallenge.resolvers=1.1.1.1:53,1.0.0.1:53      
+      - "--certificatesResolvers.dns-cloudflare.acme.dnsChallenge.resolvers=1.1.1.1:53,1.0.0.1:53"
       - "--certificatesresolvers.dns-cloudflare.acme.storage=/etc/traefik/acme.json"     
     ports:
       - target: 80
@@ -55,21 +55,23 @@ services:
     labels:
       # API
       - "traefik.enable=true"
-      - "traefik.http.routers.traefik.entrypoints=websecure"
+      - "traefik.http.routers.traefik.entrypoints=web"
       - "traefik.http.routers.traefik.rule=Host(`api.${DOMAIN_1}`)"
-#      - "traefik.http.services.traefik.loadbalancer.server.port=8080"
-#      - "traefik.http.services.traefik.loadbalancer.server.scheme=http"
-      # Wildcard cert
-      - "traefik.http.routers.traefik.tls=true"
-      - "traefik.http.routers.traefik.tls.certresolver=dns-cloudflare"
-      - "traefik.http.routers.traefik.tls.domains[0].main=${DOMAIN_1}"
-      - "traefik.http.routers.traefik.tls.domains[0].sans=*.${DOMAIN_1}"
-      - "traefik.http.routers.traefik.tls.domains[1].main=${DOMAIN_2}"
-      - "traefik.http.routers.traefik.tls.domains[1].sans=*.${DOMAIN_2}"
+      - "traefik.http.middlewares.traefik-https-redirect.redirectscheme.scheme=https"
+      - "traefik.http.routers.traefik.middlewares=traefik-https-redirect"
+      - "traefik.http.routers.traefik-secure.entrypoints=websecure"
+      - "traefik.http.routers.traefik-secure.rule=Host(`api.${DOMAIN_1}`)"      
       # Middlewares
-      - "traefik.http.routers.traefik.middlewares=middlewares-basic-auth@file"
+      - "traefik.http.routers.traefik-secure.middlewares=middlewares-basic-auth@file"
+      # Wildcard cert
+      - "traefik.http.routers.traefik-secure.tls=true"
+      - "traefik.http.routers.traefik-secure.tls.certresolver=dns-cloudflare"
+      - "traefik.http.routers.traefik-secure.tls.domains[0].main=${DOMAIN_1}"
+      - "traefik.http.routers.traefik-secure.tls.domains[0].sans=*.${DOMAIN_1}"
+      - "traefik.http.routers.traefik-secure.tls.domains[1].main=${DOMAIN_2}"
+      - "traefik.http.routers.traefik-secure.tls.domains[1].sans=*.${DOMAIN_2}"
       # Services - API
-      - "traefik.http.routers.traefik.service=api@internal"
+      - "traefik.http.routers.traefik-secure.service=api@internal"
   hastatic:
     build:
       context: .
