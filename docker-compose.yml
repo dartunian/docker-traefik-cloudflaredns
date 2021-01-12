@@ -57,21 +57,19 @@ services:
       - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
       # API
       - "traefik.enable=true"
-      - "traefik.http.routers.traefik.entrypoints=websecure"
-      - "traefik.http.routers.traefik.rule=Host(`api.${DOMAIN_1}`)"
-#      - "traefik.http.services.traefik.loadbalancer.server.port=8080"
-#      - "traefik.http.services.traefik.loadbalancer.server.scheme=http"
-      # Wildcard cert
-      - "traefik.http.routers.traefik.tls=true"
-      - "traefik.http.routers.traefik.tls.certresolver=dns-cloudflare"
-      - "traefik.http.routers.traefik.tls.domains[0].main=${DOMAIN_1}"
-      - "traefik.http.routers.traefik.tls.domains[0].sans=*.${DOMAIN_1}"
-      - "traefik.http.routers.traefik.tls.domains[1].main=${DOMAIN_2}"
-      - "traefik.http.routers.traefik.tls.domains[1].sans=*.${DOMAIN_2}"
-      # Middlewares
-      - "traefik.http.routers.traefik.middlewares=middlewares-basic-auth@file"
+      - "traefik.http.routers.api.entrypoints=websecure"
+      - "traefik.http.routers.api.rule=PathPrefix(`/api`) || PathPrefix(`/dashboard`)"
       # Services - API
-      - "traefik.http.routers.traefik.service=api@internal"
+      - "traefik.http.routers.api.service=api@internal"
+      # Middlewares
+      - "traefik.http.routers.api.middlewares=middlewares-basic-auth@file"
+      # Wildcard cert
+      - "traefik.http.routers.api.tls=true"
+      - "traefik.http.routers.api.tls.certresolver=dns-cloudflare"
+      - "traefik.http.routers.api.tls.domains[0].main=${DOMAIN_1}"
+      - "traefik.http.routers.api.tls.domains[0].sans=*.${DOMAIN_1}"
+      - "traefik.http.routers.api.tls.domains[1].main=${DOMAIN_2}"
+      - "traefik.http.routers.api.tls.domains[1].sans=*.${DOMAIN_2}"
   hastatic:
     build:
       context: .
