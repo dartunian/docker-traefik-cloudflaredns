@@ -67,9 +67,9 @@ services:
       - "traefik.http.routers.traefik.tls.domains[1].main=${DOMAIN_2}"
       - "traefik.http.routers.traefik.tls.domains[1].sans=*.${DOMAIN_2}"
       # Middlewares
-      - "traefik.http.routers.redirect-to-https.middlewares=middlewares-basic-auth@file"
+      - "traefik.http.routers.traefik.middlewares=middlewares-basic-auth@file"
       # Services - API
-      - "traefik.http.routers.redirect-to-https.service=api@internal"
+      - "traefik.http.routers.traefik.service=api@internal"
   hastatic:
     build:
       context: .
