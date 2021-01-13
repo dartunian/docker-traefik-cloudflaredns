@@ -36,10 +36,6 @@ services:
       - "traefik.http.routers.api.service=api@internal"
       # Middlewares
       - "traefik.http.routers.api.middlewares=middlewares-basic-auth@file"
-      - "traefik.http.routers.api.middlewares=authelia"
-      - "traefik.http.middlewares.authelia.forwardauth.address=http://authelia:9091/api/verify?rd=https://login.${DOMAIN_1}/"
-      - "traefik.http.middlewares.authelia.forwardauth.trustforwardheader=true"
-      - "traefik.http.middlewares.authelia.forwardauth.authresponseheaders=Remote-User, Remote-Groups"
       # Wildcard cert
       - "traefik.http.routers.api.tls=true"
       - "traefik.http.routers.api.tls.certresolver=dns-cloudflare"
