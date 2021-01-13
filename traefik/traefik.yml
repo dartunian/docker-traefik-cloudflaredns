@@ -2,6 +2,7 @@ api:
  dashboard: true
 global:
   sendAnonymousUsage: false
+  insecureSNI: true
 entryPoints:
   http:
     address: ":80"
