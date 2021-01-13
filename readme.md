@@ -1,3 +1,5 @@
+# docker-traefik-cloudflaredns
+
 Add a `.env` file with the following:
 
 ```
@@ -8,11 +10,11 @@ DOMAIN_1=
 DOMAIN_2=
 TZ=
 ```
-##Traefik
+## Traefik
 
 Create user in `/shared/.htpassword`
 
-##Authelia
+## Authelia
 
 Create secrets for `/secrets/authelia_jwt_secret` and `/secrets/authelia_session_secret`
 
