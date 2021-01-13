@@ -68,7 +68,7 @@ providers:
     endpoint: "unix:///var/run/docker.sock"
     exposedByDefault: false
 #    defaultRule: "Host(`{{ index .Labels \"com.docker.compose.service\"}}.${DOMAIN_1}`)"
-#    network: Ares
+#    network: network
   file:
     directory: "/rules"
     watch: true
@@ -82,7 +82,6 @@ certificatesResolvers:
   dns-cloudflare:
     acme:
       caServer: https://acme-staging-v02.api.letsencrypt.org/directory
-      email: ${CF_API_EMAIL}
       storage: /etc/traefik/acme.json
       dnsChallenge:
         provider: cloudflare

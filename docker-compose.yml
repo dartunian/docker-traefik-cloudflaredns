@@ -7,8 +7,9 @@ services:
       args:
         DOMAIN_1: ${DOMAIN_1}
         DOMAIN_2: ${DOMAIN_2}
-        CF_API_EMAIL: ${CF_API_EMAIL}
     container_name: "traefik"
+    command:
+      - "--certificatesresolvers.dns-cloudflare.acme.email=${CF_API_EMAIL}"
     ports:
       - 80:80
       - 443:443
@@ -18,7 +19,7 @@ services:
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
       - "./traefik/rules:/rules:ro"
-      - "./shared:/shared"      
+      - "./shared:/shared:ro"      
       - "./traefik/traefik.yml:/traefik.yml:ro"
       - "./traefik/logs:/logs:rw"
     labels:
