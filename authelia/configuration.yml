@@ -89,7 +89,7 @@ storage:
     # password: use docker secret file instead AUTHELIA_STORAGE_MYSQL_PASSWORD_FILE
 
 notifier:
-  smtp:
+#  smtp:
 #    username: SMTP_USERNAME
     # This secret can also be set using the env variables AUTHELIA_NOTIFIER_SMTP_PASSWORD_FILE
     # password: # use docker secret file instead AUTHELIA_NOTIFIER_SMTP_PASSWORD_FILE
