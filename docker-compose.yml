@@ -84,8 +84,6 @@ services:
       context: .
       dockerfile: dockerfile.authelia
     container_name: "authelia"
-    ports:
-      - 9090:9090
     restart: unless-stopped
     environment:
       - TZ=${TZ}

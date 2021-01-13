@@ -3,7 +3,7 @@
 ###############################################################
 
 host: 0.0.0.0
-port: 9090
+port: 9091
 log_level: warn
 
 # use docker secret file AUTHELIA_JWT_SECRET_FILE
