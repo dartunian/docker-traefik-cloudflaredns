@@ -40,10 +40,10 @@ access_control:
   default_policy: deny
   rules:
     # Rules applied to everyone
-    - domain:
-      - ${DOMAIN_1}
-      - "*.${DOMAIN_1}"
-      policy: one_factor    
+    # - domain:
+    #   - ${DOMAIN_1}
+    #   - "*.${DOMAIN_1}"
+    #   policy: one_factory    
     - domain: api.${DOMAIN_1}
       policy: one_factor
 #    - domain: radarr.example.com
