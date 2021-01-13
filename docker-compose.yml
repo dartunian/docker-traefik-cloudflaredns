@@ -8,57 +8,23 @@ services:
         DOMAIN_1: ${DOMAIN_1}
         DOMAIN_2: ${DOMAIN_2}
     container_name: "traefik"
-    command:
-      # Globals
-      - "--log.level=DEBUG"
-      - "--api.dashboard=true"
-      - "--global.sendAnonymousUsage=false"
-      # Docker
-      - "--providers.docker=true"
-      - "--providers.docker.exposedbydefault=false"
-      - "--providers.docker.endpoint=unix:///var/run/docker.sock"
-      - "--providers.file.directory=/rules"
-      # Entrypoints
-      - "--entrypoints.web.address=:80"
-      - "--entrypoints.websecure.address=:443"
-      - "--entrypoints.websecure.http.tls=true"
-      - "--entrypoints.https.forwardedHeaders.trustedIPs=173.245.48.0/20,103.21.244.0/22,103.22.200.0/22,103.31.4.0/22,141.101.64.0/18,108.162.192.0/18,190.93.240.0/20,188.114.96.0/20,197.234.240.0/22,198.41.128.0/17,162.158.0.0/15,104.16.0.0/12,172.64.0.0/13,131.0.72.0/22"
-      # LetsEncrypt
-      - "--certificatesresolvers.dns-cloudflare.acme.caServer=https://acme-staging-v02.api.letsencrypt.org/directory"
-      - "--certificatesresolvers.dns-cloudflare.acme.email=${CF_API_EMAIL}"
-      - "--certificatesresolvers.dns-cloudflare.acme.dnschallenge.provider=cloudflare"
-      - --certificatesResolvers.dns-cloudflare.acme.dnsChallenge.resolvers=1.1.1.1:53,1.0.0.1:53      
-      - "--certificatesresolvers.dns-cloudflare.acme.storage=/etc/traefik/acme.json"     
     ports:
-      - target: 80
-        published: 80
-        protocol: tcp
-        mode: host
-      - target: 443
-        published: 443
-        protocol: tcp
-        mode: host
-      - target: 8080
-        published: 8080
-        protocol: tcp
-        mode: host
+      - 80:80
+      - 443:443
     environment:
       - CF_API_EMAIL=${CF_API_EMAIL}
       - CF_API_KEY=${CF_API_KEY}
     volumes:
-      - "./traefik/rules:/rules"
-      - "./shared:/shared"      
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      - "./traefik/rules:/rules:ro"
+      - "./shared:/shared"      
+      - "./traefik/traefik.yml:/traefik.yml:ro"
+      - "./traefik/logs:/logs:rw"
     labels:
-      # Global http-->https
-      - "traefik.http.routers.http-catchall.rule=hostregexp(`{host:[a-z-.]+}`)"
-      - "traefik.http.routers.http-catchall.entrypoints=web"
-      - "traefik.http.routers.http-catchall.middlewares=redirect-to-https"
-      - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
       # API
       - "traefik.enable=true"
-      - "traefik.http.routers.api.entrypoints=websecure"
-      - "traefik.http.routers.api.rule=Host(`api.${DOMAIN_1}`) && (PathPrefix(`/api`) || PathPrefix(`/dashboard`))"
+      - "traefik.http.routers.api.entrypoints=https"
+      - "traefik.http.routers.api.rule=Host(`api.${DOMAIN_1}`)"
       # Services - API
       - "traefik.http.routers.api.service=api@internal"
       # Middlewares
@@ -70,6 +36,11 @@ services:
       - "traefik.http.routers.api.tls.domains[0].sans=*.${DOMAIN_1}"
       - "traefik.http.routers.api.tls.domains[1].main=${DOMAIN_2}"
       - "traefik.http.routers.api.tls.domains[1].sans=*.${DOMAIN_2}"
+      # Global http-->https
+      - "traefik.http.routers.http-catchall.entrypoints=http"
+      - "traefik.http.routers.http-catchall.rule=HostRegexp(`{host:.+}`)"
+      - "traefik.http.routers.http-catchall.middlewares=redirect-to-https"
+      - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
   hastatic:
     build:
       context: .
@@ -82,7 +53,7 @@ services:
       - "3000:3000"
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.hastatic.entrypoints=websecure"
+      - "traefik.http.routers.hastatic.entrypoints=https"
       - "traefik.http.routers.hastatic.rule=Host(`web.${DOMAIN_1}`)"
   filebrowser:
     build:
@@ -96,7 +67,7 @@ services:
     restart: unless-stopped
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.filebrowser.entrypoints=websecure"     
+      - "traefik.http.routers.filebrowser.entrypoints=https"     
       - "traefik.http.routers.filebrowser.rule=Host(`files.${DOMAIN_1}`)"
     environment:
       - FB_BASEURL=/
