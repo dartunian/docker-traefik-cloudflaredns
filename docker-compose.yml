@@ -7,6 +7,7 @@ services:
       args:
         DOMAIN_1: ${DOMAIN_1}
         DOMAIN_2: ${DOMAIN_2}
+        CF_API_EMAIL: ${CF_API_EMAIL}
     container_name: "traefik"
     ports:
       - 80:80
@@ -47,7 +48,7 @@ services:
       dockerfile: dockerfile.hastatic
       args:
         DOMAIN_1: ${DOMAIN_1}
-        DOMAIN_2: ${DOMAIN_2}    
+        DOMAIN_2: ${DOMAIN_2}
     container_name: "hastatic"
     ports:
       - "3000:3000"

@@ -67,7 +67,7 @@ providers:
   docker:
     endpoint: "unix:///var/run/docker.sock"
     exposedByDefault: false
-    defaultRule: "Host(`{{ index .Labels \"com.docker.compose.service\"}}.${DOMAIN_1}`)"
+#    defaultRule: "Host(`{{ index .Labels \"com.docker.compose.service\"}}.${DOMAIN_1}`)"
 #    network: Ares
   file:
     directory: "/rules"
