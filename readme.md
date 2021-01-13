@@ -36,3 +36,7 @@ Create a directory with the same name as your `DOMAIN_1` and copy all website fi
 
 ## Filebrowser
 `files.DOMAIN_1`
+
+<hr>
+
+Special thanks to @AstralDestiny (https://github.com/AstralDestiny)
