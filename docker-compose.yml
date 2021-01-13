@@ -23,6 +23,11 @@ services:
       - "./traefik/traefik.yml:/traefik.yml:ro"
       - "./traefik/logs:/logs:rw"
     labels:
+      # Global http-->https
+      - "traefik.http.routers.http-catchall.rule=hostregexp(`{host:[a-z-.]+}`)"
+      - "traefik.http.routers.http-catchall.entrypoints=http"
+      - "traefik.http.routers.http-catchall.middlewares=redirect-to-https"
+      - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
       # API
       - "traefik.enable=true"
       - "traefik.http.routers.api.entrypoints=https"
@@ -38,11 +43,6 @@ services:
       - "traefik.http.routers.api.tls.domains[0].sans=*.${DOMAIN_1}"
       - "traefik.http.routers.api.tls.domains[1].main=${DOMAIN_2}"
       - "traefik.http.routers.api.tls.domains[1].sans=*.${DOMAIN_2}"
-      # Global http-->https
-      - "traefik.http.routers.http-catchall.entrypoints=http"
-      - "traefik.http.routers.http-catchall.rule=HostRegexp(`{host:.+}`)"
-      - "traefik.http.routers.http-catchall.middlewares=redirect-to-https"
-      - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
   hastatic:
     build:
       context: .
