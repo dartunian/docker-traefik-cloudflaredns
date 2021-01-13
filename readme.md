@@ -17,6 +17,8 @@ Timezone in PHP time e.g. `America/Los_Angeles`
 
 Create user in `/shared/.htpassword`
 
+Add Pilot key to `/traefik/traefik.yml`
+
 ## Authelia
 `login.DOMAIN_1`
 
