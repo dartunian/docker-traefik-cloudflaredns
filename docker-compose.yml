@@ -93,7 +93,6 @@ services:
     volumes:
       - ./authelia:/config
       - ./authelia/secrets:/run/secrets:ro
-      - ./authelia/notification.txt:/tmp/authelia/notification.txt:rw
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.authelia-https.rule=Host(`login.${DOMAIN_1}`)"     

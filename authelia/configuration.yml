@@ -98,4 +98,4 @@ notifier:
 #    sender: SENDER_EMAIL
   # For testing purpose, notifications can be sent in a file. Be sure map the volume in docker-compose.
   filesystem:
-    filename: /tmp/authelia/notification.txt
+    filename: /config/notification.txt
