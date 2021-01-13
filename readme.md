@@ -13,7 +13,7 @@ TZ=
 Timezone in PHP time e.g. `America/Los_Angeles`
 
 ## Traefik
-`api.DOMAIN_1, web.DOMAIN_1, files.DOMAIN_1`
+`api.DOMAIN_1`
 
 Create user in `/shared/.htpassword`
 
@@ -25,3 +25,12 @@ Create secrets for `/secrets/authelia_jwt_secret` and `/secrets/authelia_session
 Replace default user in `/authelia/users_database.yml`
 
 Replace `${DOMAIN_1}` in `/authelia/configuration.yml` with your 'DOMAIN_1'
+
+## Hastatic
+`web.DOMAIN_1`
+To serve static websites:
+
+Create a directory with the same name as your `DOMAIN_1` and copy all website files to this directory.
+
+## Filebrowser
+`files.DOMAIN_1`
