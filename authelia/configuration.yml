@@ -41,7 +41,7 @@ access_control:
   rules:
     # Rules applied to everyone
     - domain: login.${DOMAIN_1}
-      policy: bypass
+      policy: one_factor
 #    - domain: radarr.example.com
 #      policy: bypass
 #      subject: "group:admins"
