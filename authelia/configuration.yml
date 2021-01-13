@@ -43,7 +43,7 @@ access_control:
     # - domain:
     #   - ${DOMAIN_1}
     #   - "*.${DOMAIN_1}"
-    #   policy: one_factory    
+    #   policy: one_factor   
     - domain: api.${DOMAIN_1}
       policy: one_factor
 #    - domain: radarr.example.com
