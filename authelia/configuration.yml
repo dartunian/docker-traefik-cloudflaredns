@@ -3,13 +3,13 @@
 ###############################################################
 
 host: 0.0.0.0
-port: 9091
+port: 9090
 log_level: warn
 
 # use docker secret file AUTHELIA_JWT_SECRET_FILE
 
 # https://docs.authelia.com/configuration/miscellaneous.html#default-redirection-url
-default_redirection_url: https://authelia.localhost
+# default_redirection_url: https://authelia.localhost # maybe redirect to some html? web.localhost?
 
 totp:
   issuer: authelia.com
@@ -40,7 +40,7 @@ access_control:
   default_policy: deny
   rules:
     # Rules applied to everyone
-    - domain: authelia.localhost
+    - domain: login.${DOMAIN_1}
       policy: bypass
 #    - domain: radarr.example.com
 #      policy: bypass
@@ -49,10 +49,10 @@ access_control:
 #      - "^/api/.*$"      
 #    - domain: "*.example.com"
 #      policy: one_factor
-    - domain: "*.example.com"
-      policy: two_factor
-    - domain: "example.com"
-      policy: two_factor
+#    - domain: "*.example.com"
+#      policy: two_factor
+#    - domain: "example.com"
+#      policy: two_factor
 
 session:
   name: authelia_session
@@ -61,7 +61,7 @@ session:
   # secret: SECRET_GOES_HERE # use docker secret file instead AUTHELIA_SESSION_SECRET_FILE
   expiration: 3600 # 1 hour
   inactivity: 300 # 5 minutes
-  domain: localhost # Should match whatever your root protected domain is
+  domain: ${DOMAIN_1} # Should match whatever your root protected domain is
 
 # Optional. Can improve performance on a busy system. If not enabled, session info is stored in memory.
 #  redis:

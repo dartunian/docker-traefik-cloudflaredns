@@ -75,25 +75,27 @@ services:
       - "traefik.http.routers.filebrowser.rule=Host(`files.${DOMAIN_1}`)"
     environment:
       - FB_BASEURL=/
-  # authelia:
-  #   build:
-  #     context: .
-  #     dockerfile: dockerfile.authelia
-  #   container_name: "authelia"
-  #   ports:
-  #     - 9090:9090
-  #   restart: unless-stopped
-  #   environment:
-  #     - TZ=America/Los_Angeles
-  #     - DOMAIN_1=${DOMAIN_1}
-  #     - AUTHELIA_JWT_SECRET_FILE=/run/secrets/authelia_jwt_secret
-  #     - AUTHELIA_SESSION_SECRET_FILE=/run/secrets/authelia_session_secret       
-  #   volumes:
-  #     - ./authelia:/config
-  #     - ./authelia/secrets:/run/secrets:ro 
-  #   labels:
-  #     - "traefik.enable=true"
-  #     - "traefik.http.routers.authelia-https.rule=Host(`login.${DOMAIN_1}`)"     
-  #     - "traefik.http.routers.authelia-https.entrypoints=websecure"
-  #     - "traefik.http.routers.authelia-https.service=authelia-svc"
-  #     - "traefik.http.services.authelia-svc.loadbalancer.server.port=9090"
+  authelia:
+    build:
+      context: .
+      dockerfile: dockerfile.authelia
+    container_name: "authelia"
+    ports:
+      - 9090:9090
+    restart: unless-stopped
+    environment:
+      - TZ=${TZ}
+      - DOMAIN_1=${DOMAIN_1}
+      - AUTHELIA_JWT_SECRET_FILE=/run/secrets/authelia_jwt_secret
+      - AUTHELIA_SESSION_SECRET_FILE=/run/secrets/authelia_session_secret       
+    volumes:
+      - ./authelia:/config
+      - ./authelia/secrets:/run/secrets:ro
+      - ./authelia/notification.txt:/tmp/authelia/notification.txt:rw
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.authelia-https.rule=Host(`login.${DOMAIN_1}`)"     
+      - "traefik.http.routers.authelia-https.entrypoints=https"
+      - "traefik.http.routers.authelia-https.tls=true"
+      - "traefik.http.routers.authelia-https.service=authelia-svc"
+#     - "traefik.http.services.authelia-svc.loadbalancer.server.port=9090"

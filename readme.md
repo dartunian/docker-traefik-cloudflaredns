@@ -11,3 +11,5 @@ DOMAIN_2=
 Create secrets for `/secrets/authelia_jwt_secret` and `/secrets/authelia_session_secret`
 
 Create user in `/shared/.htpassword`
+
+Replace `${DOMAIN_1}` in `/authelia/configuration.yml` with your domain
