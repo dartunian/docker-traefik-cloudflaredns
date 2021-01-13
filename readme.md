@@ -6,6 +6,7 @@ CF_API_EMAIL=
 CF_API_KEY=
 DOMAIN_1=
 DOMAIN_2=
+TZ= #php time eg America/Los_Angeles
 ```
 
 Create secrets for `/secrets/authelia_jwt_secret` and `/secrets/authelia_session_secret`
