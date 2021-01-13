@@ -55,6 +55,7 @@ services:
       - "3000:3000"
     labels:
       - "traefik.enable=true"
+      - "traefik.http.routers.hastatic.tls=true"
       - "traefik.http.routers.hastatic.entrypoints=https"
       - "traefik.http.routers.hastatic.rule=Host(`web.${DOMAIN_1}`)"
   filebrowser:
@@ -69,6 +70,7 @@ services:
     restart: unless-stopped
     labels:
       - "traefik.enable=true"
+      - "traefik.http.routers.filebrowser.tls=true"
       - "traefik.http.routers.filebrowser.entrypoints=https"     
       - "traefik.http.routers.filebrowser.rule=Host(`files.${DOMAIN_1}`)"
     environment:
