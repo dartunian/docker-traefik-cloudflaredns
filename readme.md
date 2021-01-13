@@ -13,13 +13,15 @@ TZ=
 Timezone in PHP time e.g. `America/Los_Angeles`
 
 ## Traefik
+`api.DOMAIN_1, web.DOMAIN_1, files.DOMAIN_1`
 
 Create user in `/shared/.htpassword`
 
 ## Authelia
+`login.DOMAIN_1`
 
 Create secrets for `/secrets/authelia_jwt_secret` and `/secrets/authelia_session_secret`
 
 Replace default user in `/authelia/users_database.yml`
 
-Replace `${DOMAIN_1}` in `/authelia/configuration.yml` with your domain
+Replace `${DOMAIN_1}` in `/authelia/configuration.yml` with your 'DOMAIN_1'
