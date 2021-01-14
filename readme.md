@@ -39,6 +39,9 @@ To serve static websites:
 
 Create a directory with the same name as your `DOMAIN_1` and copy all website files to this directory.
 
+## Daux
+`docs.DOMAIN_1`
+
 <hr>
 
 Special thanks to @AstralDestiny (https://github.com/AstralDestiny)

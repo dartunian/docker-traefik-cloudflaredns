@@ -2,8 +2,8 @@ api:
  dashboard: true
 global:
   sendAnonymousUsage: false
-# pilot:
-#     token:
+pilot:
+  token:
 entryPoints:
   http:
     address: ":80"

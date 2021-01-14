@@ -74,7 +74,6 @@ services:
       dockerfile: dockerfile.hastatic
       args:
         DOMAIN_1: ${DOMAIN_1}
-        DOMAIN_2: ${DOMAIN_2}
     container_name: "hastatic"
     ports:
       - "3000:3000"
@@ -82,4 +81,16 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.hastatic.tls=true"
       - "traefik.http.routers.hastatic.entrypoints=https"
-      - "traefik.http.routers.hastatic.rule=Host(`${DOMAIN_1}`)"       
+      - "traefik.http.routers.hastatic.rule=Host(`${DOMAIN_1}`)"
+  daux:
+    build:
+      context: .
+      dockerfile: dockerfile.daux
+      args:
+        DOMAIN_1: ${DOMAIN_1}
+    container_name: "daux"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.daux.tls=true"
+      - "traefik.http.routers.daux.entrypoints=https"
+      - "traefik.http.routers.daux.rule=Host(`docs.${DOMAIN_1}`)"         
