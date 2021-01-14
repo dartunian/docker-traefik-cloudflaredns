@@ -85,6 +85,8 @@ services:
   daux:
     image: daux/daux.io:latest
     container_name: "daux"
+    volumes:
+      - ./daux:/docs
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.daux.tls=true"
