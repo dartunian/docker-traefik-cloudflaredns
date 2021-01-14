@@ -1,1 +1,0 @@
-FROM filebrowser/filebrowser:latest

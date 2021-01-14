@@ -47,38 +47,6 @@ services:
       - "traefik.http.routers.api.tls.domains[0].sans=*.${DOMAIN_1}"
       - "traefik.http.routers.api.tls.domains[1].main=${DOMAIN_2}"
       - "traefik.http.routers.api.tls.domains[1].sans=*.${DOMAIN_2}"
-  hastatic:
-    build:
-      context: .
-      dockerfile: dockerfile.hastatic
-      args:
-        DOMAIN_1: ${DOMAIN_1}
-        DOMAIN_2: ${DOMAIN_2}
-    container_name: "hastatic"
-    ports:
-      - "3000:3000"
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.hastatic.tls=true"
-      - "traefik.http.routers.hastatic.entrypoints=https"
-      - "traefik.http.routers.hastatic.rule=Host(`web.${DOMAIN_1}`)"
-  filebrowser:
-    build:
-      context: .
-      dockerfile: dockerfile.filebrowser
-      args:
-        DOMAIN_1: ${DOMAIN_1}
-    ports:
-      - 8888:80
-    container_name: filebrowser
-    restart: unless-stopped
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.filebrowser.tls=true"
-      - "traefik.http.routers.filebrowser.entrypoints=https"     
-      - "traefik.http.routers.filebrowser.rule=Host(`files.${DOMAIN_1}`)"
-    environment:
-      - FB_BASEURL=/
   authelia:
     build:
       context: .
@@ -99,4 +67,19 @@ services:
       - "traefik.http.routers.authelia-https.entrypoints=https"
       - "traefik.http.routers.authelia-https.tls=true"
       - "traefik.http.routers.authelia-https.service=authelia-svc"
-      - "traefik.http.services.authelia-svc.loadbalancer.server.port=9091"      
+      - "traefik.http.services.authelia-svc.loadbalancer.server.port=9091"
+  hastatic:
+    build:
+      context: .
+      dockerfile: dockerfile.hastatic
+      args:
+        DOMAIN_1: ${DOMAIN_1}
+        DOMAIN_2: ${DOMAIN_2}
+    container_name: "hastatic"
+    ports:
+      - "3000:3000"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.hastatic.tls=true"
+      - "traefik.http.routers.hastatic.entrypoints=https"
+      - "traefik.http.routers.hastatic.rule=Host(`${DOMAIN_1}`)"       
