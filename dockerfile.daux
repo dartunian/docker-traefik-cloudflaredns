@@ -1,3 +1,2 @@
 FROM daux/daux.io:latest
-WORKDIR /var
 CMD ["daux", "generate"]
