@@ -1,4 +1,6 @@
 FROM daux/daux.io:latest
-RUN mkdir /docs
-COPY daux /docs
+RUN mkdir /var/docs
+COPY daux /var/docs
+WORKDIR /var
+CMD ["daux", "generate"]
 CMD ["daux", "serve"]
