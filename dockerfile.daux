@@ -1,3 +1,1 @@
 FROM daux/daux.io:latest
-RUN mkdir /docs
-CMD ["daux", "generate"]

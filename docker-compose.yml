@@ -73,6 +73,8 @@ services:
       context: .
       dockerfile: dockerfile.daux
     container_name: "daux"
+    command:
+      - ["daux", "generate"]
     volumes:
       - ./daux:/docs
     labels:
