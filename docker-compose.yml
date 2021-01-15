@@ -69,7 +69,9 @@ services:
       - "traefik.http.routers.authelia-https.service=authelia-svc"
       - "traefik.http.services.authelia-svc.loadbalancer.server.port=9091"
   daux:
-    image: daux/daux.io:latest
+    build:
+      context: .
+      dockerfile: dockerfile.daux
     container_name: "daux"
     volumes:
       - ./daux:/docs

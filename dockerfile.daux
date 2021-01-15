@@ -1,0 +1,3 @@
+FROM daux/daux.io:latest
+COPY daux /docs
+CMD ["daux", "serve"]
