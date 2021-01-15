@@ -90,7 +90,7 @@ services:
       - "traefik.http.routers.web.tls=true"
       - "traefik.http.routers.web.entrypoints=https"
       - "traefik.http.routers.web.rule=Host(`${DOMAIN_1}`)"
-      - "traefik.http.routers.api.middlewares=authelia"
+      - "traefik.http.routers.web.middlewares=authelia"
       - "traefik.http.middlewares.authelia.forwardauth.address=http://authelia:9091/api/verify?rd=https://${DOMAIN_1}/"
       - "traefik.http.middlewares.authelia.forwardauth.trustforwardheader=true"
       - "traefik.http.middlewares.authelia.forwardauth.authresponseheaders=Remote-User, Remote-Groups"
