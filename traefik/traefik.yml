@@ -28,12 +28,6 @@ entryPoints:
     #     - "131.0.72.0/22"        
   https:
     address: ":443"
-    middlewares:
-      no-www:
-        redirectScheme:
-          permanent: true
-          regex: "^https://www.(.*)"
-          replacement: "https://$1"
     # forwardedHeaders:
     #   trustedIPs:
     #     - "127.0.0.1/32"
