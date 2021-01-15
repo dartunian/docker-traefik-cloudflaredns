@@ -1,3 +1,4 @@
 FROM daux/daux.io:latest
+RUN mkdir /docs
 COPY daux /docs
 CMD ["daux", "serve"]
