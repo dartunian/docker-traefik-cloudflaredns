@@ -32,7 +32,7 @@ Replace default user in `/authelia/users_database.yml`
 
 Replace `${DOMAIN_1}` in `/authelia/configuration.yml` with your 'DOMAIN_1'
 
-### Hastatic
+### Web
 `DOMAIN_1`
 
 To serve static websites:

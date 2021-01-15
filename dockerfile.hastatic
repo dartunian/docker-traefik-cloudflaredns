@@ -1,6 +1,0 @@
-FROM abhin4v/hastatic:latest
-ARG DOMAIN_1
-ARG DOMAIN_2
-COPY ${DOMAIN_1} /opt/${DOMAIN_1}
-WORKDIR /opt/${DOMAIN_1}
-CMD ["/usr/bin/hastatic"]

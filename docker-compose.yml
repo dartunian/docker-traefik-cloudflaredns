@@ -80,13 +80,11 @@ services:
       - "traefik.http.routers.daux.tls=true"
       - "traefik.http.routers.daux.entrypoints=https"
       - "traefik.http.routers.daux.rule=Host(`docs.${DOMAIN_1}`)"
-  web:
-    image: tobilg/mini-webserver:latest
-    container_name: "web"
-    ports:
-      - "3000:3000"
+  httpd:
+    image: httpd:2.4
+    container_name: "httpd"
     volumes:
-      - ./${DOMAIN_1}:/app/public:ro
+      - ./${DOMAIN_1}:/usr/local/apache2/htdocs/
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.web.tls=true"
