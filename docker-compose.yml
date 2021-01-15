@@ -74,7 +74,7 @@ services:
       dockerfile: dockerfile.daux
     container_name: "daux"
     volumes:
-      - ./daux:/var/docs
+      - ./daux:/docs
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.daux.tls=true"
