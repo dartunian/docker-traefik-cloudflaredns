@@ -74,7 +74,7 @@ services:
       dockerfile: dockerfile.daux
     container_name: "daux"
     command:
-      - ["daux", "generate"]
+      - "daux generate"
     volumes:
       - ./daux:/docs
     labels:
