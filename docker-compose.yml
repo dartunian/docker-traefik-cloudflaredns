@@ -26,11 +26,11 @@ services:
       # Enable
       - "traefik.enable=true"      
       # Global http-->https
-      - "traefik.http.routers.http-catchall.rule=hostregexp(`{host:(www\.).+}`)"
+      - "traefik.http.routers.http-catchall.rule=hostregexp(`{host:(www\\.).+}`)"
       - "traefik.http.routers.http-catchall.entrypoints=http"
       - "traefik.http.routers.http-catchall.middlewares=nonwwwhttps"
-      # Global http-->https
-      - "traefik.http.routers.wwwsecure-catchall.rule=hostregexp(`{host:(www\.).+}`)"
+      # Global wwwhttps-->https
+      - "traefik.http.routers.wwwsecure-catchall.rule=hostregexp(`{host:(www\\.).+}`)"
       - "traefik.http.routers.wwwsecure-catchall.entrypoints=https"
       - "traefik.http.routers.wwwsecure-catchall.tls=true"
       - "traefik.http.routers.wwwsecure-catchall.middlewares=nonwwwhttps"
