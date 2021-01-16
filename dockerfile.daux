@@ -1,5 +1,5 @@
 # Stage 1 - the build process
-FROM daux/daux.io:latest as build-deps
+FROM node:7.10 as build-deps
 WORKDIR /build
 COPY daux /build/docs
 RUN daux generate
