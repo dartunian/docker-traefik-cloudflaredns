@@ -26,7 +26,7 @@ services:
       # Enable
       - "traefik.enable=true"      
       # Global http-->https
-      - "traefik.http.routers.http-catchall.rule=hostregexp(`{host:(www\\.).+}`)"
+      - "traefik.http.routers.http-catchall.rule=hostregexp(`{host:[a-z-.]+}`)"
       - "traefik.http.routers.http-catchall.entrypoints=http"
       - "traefik.http.routers.http-catchall.middlewares=wwwtohttps"
       # Global wwwhttps-->https
