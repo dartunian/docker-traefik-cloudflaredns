@@ -28,12 +28,16 @@ services:
       # Global http-->https
       - "traefik.http.routers.http-catchall.rule=hostregexp(`{host:(www\\.).+}`)"
       - "traefik.http.routers.http-catchall.entrypoints=http"
-      - "traefik.http.routers.http-catchall.middlewares=nonwwwhttps"
+      - "traefik.http.routers.http-catchall.middlewares=wwwtohttps"
       # Global wwwhttps-->https
       - "traefik.http.routers.wwwsecure-catchall.rule=hostregexp(`{host:(www\\.).+}`)"
       - "traefik.http.routers.wwwsecure-catchall.entrypoints=https"
       - "traefik.http.routers.wwwsecure-catchall.tls=true"
-      - "traefik.http.routers.wwwsecure-catchall.middlewares=nonwwwhttps"
+      - "traefik.http.routers.wwwsecure-catchall.middlewares=wwwtohttps"
+      # middleware: http(s)://(www.) to  https://
+      - "traefik.http.middlewares.wwwtohttps.redirectregex.regex=^https?://(?:www\\.)?(.+)"
+      - "traefik.http.middlewares.wwwtohttps.redirectregex.replacement: https://$${1}"
+      - "traefik.http.middlewares.wwwtohttps.redirectregex.permanent=true"
       # API
       - "traefik.http.routers.api.entrypoints=https"
       - "traefik.http.routers.api.rule=Host(`api.${DOMAIN_1}`)"
