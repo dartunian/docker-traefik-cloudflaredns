@@ -1,2 +1,11 @@
-FROM daux/daux.io:latest
-CMD ["daux", "generate"]
+# Stage 1 - the build process
+FROM daux/daux.io:latest as build-deps
+WORKDIR /build
+COPY daux /build/docs
+RUN daux generate
+
+# Stage 2 - the production environment
+FROM nginx:1.12-alpine
+COPY --from=build-deps /build/static /usr/share/nginx/html
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]
