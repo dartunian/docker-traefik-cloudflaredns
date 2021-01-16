@@ -1,7 +1,7 @@
 # Stage 1 - the build process
 FROM node:7.10 as build-deps
 WORKDIR /build
-COPY daux /build/docs
+COPY daux /build/Docs
 RUN daux generate
 
 # Stage 2 - the production environment
