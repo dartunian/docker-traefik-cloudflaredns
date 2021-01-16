@@ -28,6 +28,10 @@ services:
       - "traefik.http.routers.http-catchall.entrypoints=http"
       - "traefik.http.routers.http-catchall.middlewares=redirect-to-https"
       - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
+      # middleware: http(s)://(www.) to  https://
+      - "traefik.http.middlewares.https.redirectregex.regex: ^https?://(?:www\.)?(.+)"
+      - "traefik.http.middlewares.https.redirectregex.replacement: https://$${1}"
+      - "traefik.http.middlewares.https.redirectregex.permanent: true"      
       # API
       - "traefik.enable=true"
       - "traefik.http.routers.api.entrypoints=https"
