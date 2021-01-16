@@ -23,17 +23,18 @@ services:
       - "./traefik/traefik.yml:/traefik.yml:ro"
       - "./traefik/logs:/logs:rw"
     labels:
+      # Enable
+      - "traefik.enable=true"      
       # Global http-->https
-      - "traefik.http.routers.http-catchall.rule=hostregexp(`{host:[a-z-.]+}`)"
+      - "traefik.http.routers.http-catchall.rule=hostregexp(`{host:(www\.).+}`)"
       - "traefik.http.routers.http-catchall.entrypoints=http"
-      - "traefik.http.routers.http-catchall.middlewares=redirect-to-https"
-      - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
-      # middleware: http(s)://(www.) to  https://
-      traefik.http.middlewares.https.redirectregex.regex: ^https?://(?:www\.)?(.+)
-      traefik.http.middlewares.https.redirectregex.replacement: https://$${1}
-      traefik.http.middlewares.https.redirectregex.permanent: true  
+      - "traefik.http.routers.http-catchall.middlewares=nonwwwhttps"
+      # Global http-->https
+      - "traefik.http.routers.wwwsecure-catchall.rule=hostregexp(`{host:(www\.).+}`)"
+      - "traefik.http.routers.wwwsecure-catchall.entrypoints=https"
+      - "traefik.http.routers.wwwsecure-catchall.tls=true"
+      - "traefik.http.routers.wwwsecure-catchall.middlewares=nonwwwhttps"
       # API
-      - "traefik.enable=true"
       - "traefik.http.routers.api.entrypoints=https"
       - "traefik.http.routers.api.rule=Host(`api.${DOMAIN_1}`)"
       # Services - API
